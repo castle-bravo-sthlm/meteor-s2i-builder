@@ -1,0 +1,51 @@
+#!/bin/bash -e
+#
+# S2I assemble script for the 'c2products/meteor-builder' image.
+# The 'assemble' script builds your application source so that it is ready to run.
+#
+# For more information refer to the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+if [[ "$1" == "-h" ]]; then
+	# If the 'c2products/meteor-builder' assemble script is executed with '-h' flag,
+	# print the usage.
+	exec /usr/libexec/s2i/usage
+fi
+
+# Restore artifacts from the previous build (if they exist).
+#
+if [ "$(ls /tmp/artifacts/ 2>/dev/null)" ]; then
+  echo "---> Restoring build artifacts..."
+  mv /tmp/artifacts/. ./
+fi
+
+echo $PATH
+echo "---> Installing application source..."
+cp -Rf /tmp/src/. $HOME/repo
+
+echo "---> Building application from source..."
+
+if [ ! -d "$HOME/repo/$CONTEXT_DIR" ]; then
+	echo "The specified context directory does not exist"
+	exit 1
+else
+	cd $HOME/repo/$CONTEXT_DIR
+fi
+
+if [ -f "$(pwd)/package.json" ]; then
+	 npm install
+fi
+
+echo "---> Building meteor bundle"
+time $HOME/.meteor/meteor build --directory $HOME/build --architecture os.linux.x86_64
+
+echo "---> Install dependencies"
+cd $HOME/build/bundle
+(cd programs/server && npm install)
+
+echo "---> Cleanup"
+rm -rf $HOME/repo
+rm -rf $HOME/.meteor
+rm -rf /tmp/src/
+npm cache clear
