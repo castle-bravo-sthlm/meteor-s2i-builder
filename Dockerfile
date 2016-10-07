@@ -4,7 +4,7 @@ FROM openshift/base-centos7
 
 MAINTAINER André Lillvede <andre.lillvede@crosby.se>
 
-ENV BUILDER_VERSION 1.3
+ENV BUILDER_VERSION 1.4
 ENV PORT 3000
 
 # subdirectory in which meteor project is housed, defaulting to repo root
@@ -13,9 +13,9 @@ ENV PORT 3000
 ENV CONTEXT_DIR ""
 
 LABEL io.k8s.description="Platform for building meteor application from source" \
-      io.k8s.display-name="Meteor s2i builder 1.3" \
+      io.k8s.display-name="Meteor s2i builder 1.4" \
       io.openshift.expose-services="8080:http" \
-      io.openshift.tags="meteor,s2i,builder,1.3"
+      io.openshift.tags="meteor,s2i,builder,1.4"
 
 RUN yum install -y curl bzip2 build-essential python git && yum clean all -y
 
