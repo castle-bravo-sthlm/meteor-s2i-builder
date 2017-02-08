@@ -1,6 +1,6 @@
 
 # c2products/meteor-builder
-FROM openshift/base-centos7
+FROM computersciencehouse/s2i-base-ubuntu
 
 MAINTAINER André Lillvede <andre.lillvede@crosby.se>
 
@@ -17,7 +17,7 @@ LABEL io.k8s.description="Platform for building meteor application from source" 
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="meteor,s2i,builder,1.4"
 
-RUN yum install -y curl bzip2 build-essential python git && yum clean all -y
+RUN apt-get update && apt-get install -y curl bzip2 build-essential python git gstreamer1.0
 
 # Copy the S2I scripts to /usr/libexec/s2i, since openshift/base-centos7 image sets io.openshift.s2i.scripts-url label that way, or update that label
 COPY ./.s2i/bin/ /usr/libexec/s2i

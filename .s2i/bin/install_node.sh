@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-NODE_VERSION=4.4.7
+NODE_VERSION=4.6.2
 NODE_ARCH=x64
 
 NODE_DIST=node-v${NODE_VERSION}-linux-${NODE_ARCH}
